@@ -16,7 +16,7 @@ import (
     "compress/gzip"
     "net/url"
     "os"
-    "github.com/chenxuefei-pp/ccloudsync/cookie"
+    "github.com/chenxuefei-pp/go-cookie"
     "github.com/chenxuefei-pp/ccloudsync/utils"
 )
 
@@ -162,7 +162,7 @@ func (*ICloudService) New(Id string, Pwd string, CookiePath string ) (*ICloudSer
 }
 
 // 认证
-func (s *ICloudService) Auth() error {
+func (s *ICloudService) Auth() *ICloudError {
 
     body := map[string]interface{}{
         "apple_id": s.appleId,
@@ -179,16 +179,12 @@ func (s *ICloudService) Auth() error {
 
     if err != nil {
         utils.Warn("error:", err)
-        return err
+        return MakeError(RequestError)
     }
 
-    //headers,_ := json.Marshal(resp.Header)
     resp_body, _ := ioutil.ReadAll(resp.Body)
-    //
+
     defer resp.Body.Close()
-    //
-    //utils.Debug( string( headers ) )
-    //utils.Debug( string(resp_body) )
 
     resp_data := make(map[string]interface{})
     json.Unmarshal(resp_body, &resp_data)

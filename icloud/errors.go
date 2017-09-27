@@ -11,21 +11,15 @@ const (
     DeviceInfoError     = 4
     UrlEncodeError      = 5
     QueryFailed         = 6
+    RequestError        = 7
 )
 
 type ICloudError int
 
 func MakeError(code int) *ICloudError {
-    e := new(ICloudError)
-    *e = ICloudError(code)
-    return e
-}
-
-
-type TypeError int
-
-func (t *TypeError) Error() string {
-    return "Type passed error!"
+    err := new(ICloudError)
+    *err = ICloudError(code)
+    return err
 }
 
 func (t *ICloudError) Error() string {
@@ -39,4 +33,11 @@ func (t *ICloudError) Error() string {
     default:
         return "Unknow error!"
     }
+}
+
+func (t *ICloudError) Equal(error int) bool {
+    if int(*t) == error {
+        return true
+    }
+    return false
 }
